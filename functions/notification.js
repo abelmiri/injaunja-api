@@ -18,7 +18,7 @@ const addNotification = ({event_id, notification, response}) =>
     })
 }
 
-const getUserNotification = ({user_id, response}) =>
+const getUserShortNotification = ({user_id, response}) =>
 {
     let request = new mssql.Request(Connection.connection)
     request.query(`select * from users where id = N'${user_id}'`, (error, records) =>
@@ -231,7 +231,16 @@ const getUserNotification = ({user_id, response}) =>
                                                                         form: on_time_notifications ? on_time_notifications : [],
                                                                     })
                                                                 }
-                                                            } else console.log(notification.date, current_date, "A")
+                                                            } else
+                                                            {
+                                                                console.log(notification.date, current_date, "A")
+                                                                if (cat_inx === user_categories_arr.length - 1 && evt_inx === event_records.recordset.length - 1)
+                                                                    response.send({
+                                                                        state: 0,
+                                                                        log: `USER_${user_id}_FAVORITES_GOT_NO_AVAILABLE_NOTIFICATIONS`,
+                                                                        form: on_time_notifications ? on_time_notifications : [],
+                                                                    })
+                                                            }
                                                         } else
                                                         {
                                                             if (std_evt_inx === selected_events_arr.length - 1)
@@ -407,7 +416,16 @@ const getUserNotification = ({user_id, response}) =>
                                                                 log: `USER_${user_id}_FAVORITES_GOT_NO_ON_DATE_NOTIFICATIONS`,
                                                                 form: on_time_notifications ? on_time_notifications : [],
                                                             })
-                                                        else console.log(notification.date, current_date, "B")
+                                                        else
+                                                        {
+                                                            console.log(notification.date, current_date, "B")
+                                                            if (cat_inx === user_categories_arr.length - 1 && std_evt_inx === event_records.recordset.length - 1)
+                                                                response.send({
+                                                                    state: 0,
+                                                                    log: `USER_${user_id}_FAVORITES_GOT_NO_AVAILABLE_NOTIFICATIONS`,
+                                                                    form: on_time_notifications ? on_time_notifications : [],
+                                                                })
+                                                        }
                                                     }
                                                 } else
                                                 {
@@ -439,8 +457,89 @@ const getUserNotification = ({user_id, response}) =>
                     log: `USER_${user_id}_HAVE_NO_FAVORITES`,
                     form: user_categories_arr ? user_categories_arr : [],
                 })
-            } else response.send({state: -6, log: `USER_${user_id}_NOT_FOUND`, form: records.recordset ? records.recordset : []})
+            } else response.send({
+                state: -6,
+                log: `USER_${user_id}_NOT_FOUND`,
+                form: records.recordset ? records.recordset : [],
+            })
         }
+    })
+}
+
+const getUserLongNotification = ({user_id, response}) =>
+{
+    let request = new mssql.Request(Connection.connection)
+    request.query(`select * from users where id = N'${user_id}'`, (error, records) =>
+    {
+        if (error) response.send({state: -5, log: "DATA_BASE_ERROR", form: error})
+        else
+        {
+            if (records.recordset.length > 0)
+            {
+                let user = records.recordset[0]
+                let user_categories_arr = JSON.parse(user.categories)
+
+                if (user_categories_arr !== null && user_categories_arr.length > 0)
+                {
+                    let Jdate = new JDate()
+                    let date = new Date()
+                    /** @namespace Jdate.date */
+                    let current_date_abel = Jdate.date[0] * 365 + (Jdate.date[1] - 1) * 30 + Jdate.date[2]
+
+                    let selected_events = []
+
+                    user_categories_arr.forEach((category_id, cat_inx) =>
+                    {
+                        // let request = new mssql.Request(Connection.connection)
+                        request.query(
+                            `select id, category_id, name, notification, is_long from events where
+                            category_id = '${category_id}'
+                            and (is_long = 'true')
+                            and ((start_year * 365 + (start_month - 1) * 30 + start_day) <= ${current_date_abel} and (end_year * 365 + (end_month - 1) * 30 + end_day) >= ${current_date_abel})`
+                            , (err, event_records) =>
+                            {
+                                if (err) response.send({
+                                    state: -7,
+                                    log: "DATA_BASE_ERROR",
+                                    form: err,
+                                })
+                                else if (event_records.recordset.length > 0)
+                                {
+                                    event_records.recordset.forEach(p => selected_events.push(p))
+                                    if (user_categories_arr.length - 1 === cat_inx)
+                                        processLongEvents(selected_events, response)
+                                }
+                            })
+                    })
+                } else response.send({
+                    state: 0,
+                    log: `USER_${user_id}_HAVE_NO_FAVORITES`,
+                    form: user_categories_arr ? user_categories_arr : [],
+                })
+            } else response.send({
+                state: -6,
+                log: `USER_${user_id}_NOT_FOUND`,
+                form: records.recordset ? records.recordset : [],
+            })
+        }
+    })
+}
+
+function processLongEvents(events, response)
+{
+    // let Jdate = new JDate()
+    // let date = new Date()
+    /** @namespace Jdate.date */
+    // let current_year = Jdate.date[0]
+    // let current_month = Jdate.date[1]
+    // let current_day = Jdate.date[2]
+    // let current_date = `${Jdate.date[0]}/${Jdate.date[1]}/${Jdate.date[2]}`
+    // let current_time = [date.getHours(), date.getMinutes()]
+
+    response.send({
+        state: 1,
+        log: `USER_EVENTS_DEVELOP`,
+        form: events.length > 0 ? events : [],
     })
 }
 
@@ -448,5 +547,6 @@ const getUserNotification = ({user_id, response}) =>
 module.exports =
     {
         addNotification: addNotification,
-        getUserNotification: getUserNotification,
+        getUserShortNotification: getUserShortNotification,
+        getUserLongNotification: getUserLongNotification,
     }

@@ -7,7 +7,7 @@ let notification_router = express.Router()
 
 ////////////////////////////////////// ROUTERS_CONFIG_ENDED
 
-const {addNotification, getUserNotification} = require("../functions/notification")
+const {addNotification, getUserShortNotification, getUserLongNotification} = require("../functions/notification")
 
 ////////////////////////////////////// FUNCTION_CALLS_ENDED
 
@@ -45,7 +45,7 @@ notification_router.route("/add")
         } else res.send({state: -1, log: "ADD_NOTIFICATION_PERMISSION_DENIED", form: data})
     })
 
-notification_router.route("/getUserNotification")
+notification_router.route("/getUserShortNotification")
     .post((req, res) =>
     {
         res.setHeader("Access-Control-Allow-Origin", "*")
@@ -60,7 +60,32 @@ notification_router.route("/getUserNotification")
                 if (!isNaN(data.user_id))
                 {
                     data.user_id ?
-                        getUserNotification(
+                        getUserShortNotification(
+                            {
+                                user_id: data.user_id,
+                                response: res
+                            }) : res.send({state: -4, log: "GET_USER_NOTIFICATIONS_PARAMETERS_UNDEFINED", form: []})
+                } else res.send({state: -3, log: `USER_ID_${data.user_id}_IS_NOT_A_NUMBER`, form: []})
+            } else res.send({state: -2, log: "GET_USER_NOTIFICATIONS_INCORRECT_HEADER", form: []})
+        } else res.send({state: -1, log: "GET_USER_NOTIFICATIONS_PERMISSION_DENIED", form: []})
+    })
+
+notification_router.route("/getUserLongNotification")
+    .post((req, res) =>
+    {
+        res.setHeader("Access-Control-Allow-Origin", "*")
+
+        let data = {...req.body}
+        let header = {...req.headers}
+
+        if (header.auth !== undefined)
+        {
+            if (header.auth === Data.android_token || header.auth === Data.ios_token)
+            {
+                if (!isNaN(data.user_id))
+                {
+                    data.user_id ?
+                        getUserLongNotification(
                             {
                                 user_id: data.user_id,
                                 response: res
