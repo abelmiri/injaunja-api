@@ -466,7 +466,7 @@ const getUserShortNotification = ({user_id, response}) =>
     })
 }
 
-const getUserLongNotification = ({user_id, response}) =>
+const getUserLongNotification = ({user_id, response}) => // for seyed
 {
     let request = new mssql.Request(Connection.connection)
     request.query(`select * from users where id = N'${user_id}'`, (error, records) =>
