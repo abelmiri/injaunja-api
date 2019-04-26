@@ -104,12 +104,14 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                             notification_time: notification.time,
                                                                         })
                                                                         console.log("ADDED 1A")
-                                                                    } else
+                                                                    }
+                                                                    else
                                                                     {
                                                                         console.log(notification_time[0] + ":" + notification_time[1], current_time[0] + ":" + current_time[1])
                                                                         console.log("NOT_ADDED 1A")
                                                                     }
-                                                                } else if (notification_time[0] === current_time[0] + 1)
+                                                                }
+                                                                else if (notification_time[0] === current_time[0] + 1)
                                                                 {
                                                                     if (notification_time[1] < 13 && current_time[1] > 47)
                                                                     {
@@ -124,12 +126,14 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                             notification_time: notification.time,
                                                                         })
                                                                         console.log("ADDED 2A")
-                                                                    } else
+                                                                    }
+                                                                    else
                                                                     {
                                                                         console.log(notification_time[0] + ":" + notification_time[1], current_time[0] + ":" + current_time[1])
                                                                         console.log("NOT_ADDED 2A")
                                                                     }
-                                                                } else if (notification_time[0] === current_time[0] - 1)
+                                                                }
+                                                                else if (notification_time[0] === current_time[0] - 1)
                                                                 {
                                                                     if (notification_time[1] > 47 && current_time[1] < 13)
                                                                     {
@@ -144,7 +148,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                             notification_time: notification.time,
                                                                         })
                                                                         console.log("ADDED 3A")
-                                                                    } else
+                                                                    }
+                                                                    else
                                                                     {
                                                                         console.log(notification_time[0] + ":" + notification_time[1], current_time[0] + ":" + current_time[1])
                                                                         console.log("NOT_ADDED 3A")
@@ -195,7 +200,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                                                         log: `USER_${user_id}_FAVORITES_NOTIFICATIONS`,
                                                                                                         form: ready_notifications ? ready_notifications : [],
                                                                                                     })
-                                                                                                } else
+                                                                                                }
+                                                                                                else
                                                                                                 {
                                                                                                     response.send({
                                                                                                         state: 0,
@@ -204,7 +210,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                                                     })
                                                                                                 }
                                                                                             }
-                                                                                        } else if (on_tm_inx === on_time_notifications.length - 1)
+                                                                                        }
+                                                                                        else if (on_tm_inx === on_time_notifications.length - 1)
                                                                                         {
                                                                                             if (ready_notifications.length > 0)
                                                                                             {
@@ -213,7 +220,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                                                     log: `USER_${user_id}_FAVORITES_NOTIFICATIONS`,
                                                                                                     form: ready_notifications ? ready_notifications : [],
                                                                                                 })
-                                                                                            } else
+                                                                                            }
+                                                                                            else
                                                                                             {
                                                                                                 response.send({
                                                                                                     state: 0,
@@ -225,13 +233,15 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                                     }
                                                                                 })
                                                                         })
-                                                                    } else response.send({
+                                                                    }
+                                                                    else response.send({
                                                                         state: 0,
                                                                         log: `USER_${user_id}_FAVORITES_GOT_NO_ON_TIME_NOTIFICATIONS`,
                                                                         form: on_time_notifications ? on_time_notifications : [],
                                                                     })
                                                                 }
-                                                            } else
+                                                            }
+                                                            else
                                                             {
                                                                 console.log(notification.date, current_date, "A")
                                                                 if (cat_inx === user_categories_arr.length - 1 && evt_inx === event_records.recordset.length - 1)
@@ -241,7 +251,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                         form: on_time_notifications ? on_time_notifications : [],
                                                                     })
                                                             }
-                                                        } else
+                                                        }
+                                                        else
                                                         {
                                                             if (std_evt_inx === selected_events_arr.length - 1)
                                                             {
@@ -281,12 +292,14 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                     notification_time: notification.time,
                                                                 })
                                                                 console.log("ADDED 1B")
-                                                            } else
+                                                            }
+                                                            else
                                                             {
                                                                 console.log(notification_time[0] + ":" + notification_time[1], current_time[0] + ":" + current_time[1])
                                                                 console.log("NOT_ADDED 1B")
                                                             }
-                                                        } else if (notification_time[0] === current_time[0] + 1)
+                                                        }
+                                                        else if (notification_time[0] === current_time[0] + 1)
                                                         {
                                                             if (notification_time[1] < 13 && current_time[1] > 47)
                                                             {
@@ -301,12 +314,14 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                     notification_time: notification.time,
                                                                 })
                                                                 console.log("ADDED 2B")
-                                                            } else
+                                                            }
+                                                            else
                                                             {
                                                                 console.log(notification_time[0] + ":" + notification_time[1], current_time[0] + ":" + current_time[1])
                                                                 console.log("NOT_ADDED 2B")
                                                             }
-                                                        } else if (notification_time[0] === current_time[0] - 1)
+                                                        }
+                                                        else if (notification_time[0] === current_time[0] - 1)
                                                         {
                                                             if (notification_time[1] > 47 && current_time[1] < 13)
                                                             {
@@ -321,7 +336,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                     notification_time: notification.time,
                                                                 })
                                                                 console.log("ADDED 3B")
-                                                            } else
+                                                            }
+                                                            else
                                                             {
                                                                 console.log(notification_time[0] + ":" + notification_time[1], current_time[0] + ":" + current_time[1])
                                                                 console.log("NOT_ADDED 3B")
@@ -372,7 +388,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                                                 log: `USER_${user_id}_FAVORITES_NOTIFICATIONS`,
                                                                                                 form: ready_notifications ? ready_notifications : [],
                                                                                             })
-                                                                                        } else
+                                                                                        }
+                                                                                        else
                                                                                         {
                                                                                             response.send({
                                                                                                 state: 0,
@@ -381,7 +398,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                                             })
                                                                                         }
                                                                                     }
-                                                                                } else if (on_tm_inx === on_time_notifications.length - 1)
+                                                                                }
+                                                                                else if (on_tm_inx === on_time_notifications.length - 1)
                                                                                 {
                                                                                     if (ready_notifications.length > 0)
                                                                                     {
@@ -390,7 +408,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                                             log: `USER_${user_id}_FAVORITES_NOTIFICATIONS`,
                                                                                             form: ready_notifications ? ready_notifications : [],
                                                                                         })
-                                                                                    } else
+                                                                                    }
+                                                                                    else
                                                                                     {
                                                                                         response.send({
                                                                                             state: 0,
@@ -402,13 +421,15 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                             }
                                                                         })
                                                                 })
-                                                            } else response.send({
+                                                            }
+                                                            else response.send({
                                                                 state: 0,
                                                                 log: `USER_${user_id}_FAVORITES_GOT_NO_ON_TIME_NOTIFICATIONS`,
                                                                 form: on_time_notifications ? on_time_notifications : [],
                                                             })
                                                         }
-                                                    } else
+                                                    }
+                                                    else
                                                     {
                                                         if (std_evt_inx === selected_events_arr.length - 1)
                                                             response.send({
@@ -427,7 +448,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                                 })
                                                         }
                                                     }
-                                                } else
+                                                }
+                                                else
                                                 {
                                                     if (std_evt_inx === selected_events_arr.length - 1)
                                                     {
@@ -439,7 +461,8 @@ const getUserShortNotification = ({user_id, response}) =>
                                                     }
                                                 }
                                             })
-                                    } else
+                                    }
+                                    else
                                     {
                                         cat_inx === user_categories_arr.length - 1 ?
                                             response.send({
@@ -452,12 +475,14 @@ const getUserShortNotification = ({user_id, response}) =>
                                 }
                             })
                     })
-                } else response.send({
+                }
+                else response.send({
                     state: 0,
                     log: `USER_${user_id}_HAVE_NO_FAVORITES`,
                     form: user_categories_arr ? user_categories_arr : [],
                 })
-            } else response.send({
+            }
+            else response.send({
                 state: -6,
                 log: `USER_${user_id}_NOT_FOUND`,
                 form: records.recordset ? records.recordset : [],
@@ -482,7 +507,7 @@ const getUserLongNotification = ({user_id, response}) => // for seyed
                 if (user_categories_arr !== null && user_categories_arr.length > 0)
                 {
                     let Jdate = new JDate()
-                    let date = new Date()
+                    // let date = new Date()
                     /** @namespace Jdate.date */
                     let current_date_abel = Jdate.date[0] * 365 + (Jdate.date[1] - 1) * 30 + Jdate.date[2]
 
@@ -505,18 +530,35 @@ const getUserLongNotification = ({user_id, response}) => // for seyed
                                 })
                                 else if (event_records.recordset.length > 0)
                                 {
-                                    event_records.recordset.forEach(p => selected_events.push(p))
-                                    if (user_categories_arr.length - 1 === cat_inx)
-                                        processLongEvents(selected_events, response)
+                                    event_records.recordset.forEach((evnts, event_inx) =>
+                                    {
+                                        selected_events.push(evnts)
+                                        if (user_categories_arr.length - 1 === cat_inx && event_records.recordset.length - 1 === event_inx)
+                                        {
+                                            setTimeout(() =>
+                                            {
+                                                processLongEvents(selected_events, response, user_id)
+                                            }, 30)
+                                        }
+                                    })
+                                }
+                                else if (user_categories_arr.length - 1 === cat_inx) // last cat without event
+                                {
+                                    setTimeout(() =>
+                                    {
+                                        processLongEvents(selected_events, response, user_id)
+                                    }, 30)
                                 }
                             })
                     })
-                } else response.send({
+                }
+                else response.send({
                     state: 0,
                     log: `USER_${user_id}_HAVE_NO_FAVORITES`,
                     form: user_categories_arr ? user_categories_arr : [],
                 })
-            } else response.send({
+            }
+            else response.send({
                 state: -6,
                 log: `USER_${user_id}_NOT_FOUND`,
                 form: records.recordset ? records.recordset : [],
@@ -525,21 +567,154 @@ const getUserLongNotification = ({user_id, response}) => // for seyed
     })
 }
 
-function processLongEvents(events, response)
+function processLongEvents(events, response, user_id)
 {
-    // let Jdate = new JDate()
-    // let date = new Date()
-    /** @namespace Jdate.date */
-    // let current_year = Jdate.date[0]
-    // let current_month = Jdate.date[1]
-    // let current_day = Jdate.date[2]
-    // let current_date = `${Jdate.date[0]}/${Jdate.date[1]}/${Jdate.date[2]}`
-    // let current_time = [date.getHours(), date.getMinutes()]
+    if (events.length > 0)
+    {
+        let events_notifications = []
+        events.forEach((event, event_index) =>
+        {
+            if (events.length - 1 === event_index)
+            {
+                let event_notifications = event.notification ? JSON.parse(event.notification) : []
+                event_notifications.length > 0 && event_notifications.forEach(notification =>
+                {
+                    events_notifications.push({
+                        category_id: event.category_id,
+                        event_id: event.id,
+                        event_name: event.name,
+                        notification_id: notification.id,
+                        notification_title: notification.title,
+                        notification_description: notification.description,
+                        notification_date: notification.date,
+                        notification_time: notification.time,
+                        notification_hour_minute: [parseInt(notification.time.split(":")[0], 10), parseInt(notification.time.split(":")[1], 10)],
+                    })
+                })
+                setTimeout(() =>
+                {
+                    processNotifications(events_notifications, response, user_id)
+                }, 30)
+            }
+            else
+            {
+                let event_notifications = event.notification ? JSON.parse(event.notification) : []
+                event_notifications.length > 0 && event_notifications.forEach(notification =>
+                {
+                    events_notifications.push({
+                        category_id: event.category_id,
+                        event_id: event.id,
+                        event_name: event.name,
+                        notification_id: notification.id,
+                        notification_title: notification.title,
+                        notification_description: notification.description,
+                        notification_date: notification.date,
+                        notification_time: notification.time,
+                        notification_hour_minute: [parseInt(notification.time.split(":")[0], 10), parseInt(notification.time.split(":")[1], 10)],
+                    })
+                })
+            }
+        })
+    }
+    else
+    {
+        response.send({
+            state: 0,
+            log: `NO_EVENT_AVAILABLE_FOR_USER_${user_id}`,
+            form: [],
+        })
+    }
+}
 
+function processNotifications(notifications, response, user_id)
+{
+    let Jdate = new JDate()
+    let date = new Date()
+    /** @namespace Jdate.date */
+    let current_date = `${Jdate.date[0]}/${Jdate.date[1]}/${Jdate.date[2]}`
+    let current_time = [date.getHours(), date.getMinutes()]
+
+    if (notifications.length > 0)
+    {
+        let on_time_notifications = []
+        notifications.forEach((notification, index) =>
+        {
+            if (notifications.length - 1 === index)
+            {
+                if (notification.notification_date === current_date)
+                {
+                    if (notification.notification_hour_minute[0] === current_time[0])
+                    {
+                        if (current_time[1] - 8 <= notification.notification_hour_minute[1] && current_time[1] + 8 >= notification.notification_hour_minute[1])
+                        {
+                            on_time_notifications.push(notification)
+                        }
+                    }
+                    else if (notification.notification_hour_minute[0] === current_time[0] + 1)
+                    {
+                        if (notification.notification_hour_minute[1] <= 10 && current_time[1] >= 50)
+                        {
+                            on_time_notifications.push(notification)
+                        }
+                    }
+                    else if (notification.notification_hour_minute[0] === current_time[0] - 1)
+                    {
+                        if (notification.notification_hour_minute[1] >= 50 && current_time[1] <= 10)
+                        {
+                            on_time_notifications.push(notification)
+                        }
+                    }
+                }
+                setTimeout(() =>
+                {
+                    processOnTimeNotifications(on_time_notifications, response, user_id)
+                }, 30)
+            }
+            else
+            {
+                if (notification.notification_date === current_date)
+                {
+                    if (notification.notification_hour_minute[0] === current_time[0])
+                    {
+                        if (current_time[1] - 8 <= notification.notification_hour_minute[1] && current_time[1] + 8 >= notification.notification_hour_minute[1])
+                        {
+                            on_time_notifications.push(notification)
+                        }
+                    }
+                    else if (notification.notification_hour_minute[0] === current_time[0] + 1)
+                    {
+                        if (notification.notification_hour_minute[1] <= 10 && current_time[1] >= 50)
+                        {
+                            on_time_notifications.push(notification)
+                        }
+                    }
+                    else if (notification.notification_hour_minute[0] === current_time[0] - 1)
+                    {
+                        if (notification.notification_hour_minute[1] >= 50 && current_time[1] <= 10)
+                        {
+                            on_time_notifications.push(notification)
+                        }
+                    }
+                }
+            }
+        })
+    }
+    else
+    {
+        response.send({
+            state: 0,
+            log: `NO_NOTIFICATION_AVAILABLE_FOR_USER_${user_id}`,
+            form: [],
+        })
+    }
+}
+
+function processOnTimeNotifications(notifications, response, user_id)
+{
     response.send({
         state: 1,
-        log: `USER_EVENTS_DEVELOP`,
-        form: events.length > 0 ? events : [],
+        log: `USER_ON_TIME_${user_id}_NOTIFICATIONS`,
+        form: notifications,
     })
 }
 

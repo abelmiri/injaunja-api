@@ -170,7 +170,6 @@ const update = ({id, name, description, selectable, picture, svg, response}) =>
             } else response.send({state: -5, log: `CATEGORY_${id}_NOT_FOUND`, form: null})
         }
     })
-
 }
 
 module.exports =
