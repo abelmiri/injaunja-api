@@ -711,11 +711,91 @@ function processNotifications(notifications, response, user_id)
 
 function processOnTimeNotifications(notifications, response, user_id)
 {
-    response.send({
-        state: 1,
-        log: `USER_ON_TIME_${user_id}_NOTIFICATIONS`,
-        form: notifications,
-    })
+    if (notifications.length > 0)
+    {
+        let request = new mssql.Request(Connection.connection)
+        let ready_to_send_notifications = []
+        notifications.forEach((notification, index) =>
+        {
+            let Jdate = new JDate()
+            let date = new Date()
+            /** @namespace Jdate.date */
+            let current_date = `${Jdate.date[0]}/${Jdate.date[1]}/${Jdate.date[2]}`
+            let current_time = [date.getHours(), date.getMinutes()]
+            if (notifications.length - 1 === index)
+            {
+                request.query(`
+                select * from log where 
+                user_id = ${user_id} and 
+                event_id = ${notification.event_id} and 
+                notification_id = ${notification.notification_id}
+                `, (error, logs) =>
+                {
+                    if (error) response.send({state: -6, log: "DATA_BASE_ERROR", form: error})
+                    else
+                    {
+                        if (logs.recordset.length === 0)
+                        {
+                            ready_to_send_notifications.push(notification)
+                            request.query(`
+                            insert into log (user_id, event_id, notification_id, deliver_time, deliver_date)
+                            values (
+                            ${user_id}, 
+                            ${notification.event_id}, 
+                            ${notification.notification_id}, 
+                            '${current_time[0]}:${current_time[1]}', 
+                            '${current_date}')
+                            `,(log_err) => log_err ? console.log("LOG_LONG_NOTIFICATION_ERROR", log_err) : null)
+                        }
+                        setTimeout(() =>
+                        {
+                            response.send({
+                                state: 1,
+                                log: `USER_ON_TIME_${user_id}_NOTIFICATIONS`,
+                                form: ready_to_send_notifications,
+                            })
+                        }, 30)
+                    }
+                })
+            }
+            else
+            {
+                request.query(`
+                select * from log where 
+                user_id = ${user_id} and 
+                event_id = ${notification.event_id} and 
+                notification_id = ${notification.notification_id}
+                `, (error, logs) =>
+                {
+                    if (error) response.send({state: -6, log: "DATA_BASE_ERROR", form: error})
+                    else
+                    {
+                        if (logs.recordset.length === 0)
+                        {
+                            ready_to_send_notifications.push(notification)
+                            request.query(`
+                            insert into log (user_id, event_id, notification_id, deliver_time, deliver_date)
+                            values (
+                            ${user_id}, 
+                            ${notification.event_id}, 
+                            ${notification.notification_id}, 
+                            '${current_time[0]}:${current_time[1]}', 
+                            '${current_date}')
+                            `,(log_err) => log_err ? console.log("LOG_LONG_NOTIFICATION_ERROR", log_err) : null)
+                        }
+                    }
+                })
+            }
+        })
+    }
+    else
+    {
+        response.send({
+            state: 0,
+            log: `NO_ON_TIME_NOTIFICATION_AVAILABLE_FOR_USER_${user_id}`,
+            form: [],
+        })
+    }
 }
 
 
