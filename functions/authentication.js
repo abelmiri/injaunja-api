@@ -26,8 +26,8 @@ const login = ({phone, response}) =>
                             id: form_data.id,
                             username: form_data.username,
                             categories: JSON.parse(form_data.categories),
-                            type: form_data.type
-                        }
+                            type: form_data.type,
+                        },
                     })
                 }
             }
@@ -50,8 +50,11 @@ const admin_login = ({phone, username, response}) =>
                 else
                 {
                     if (username === res0.recordset[0].username)
-                        response.send({state: 1, log: "LOGIN_SUCCEED", form: res0.recordset[0]})
-                    else response.send({state: -5, log: "LOGIN_USERNAME_IS_NOT_CORRECT"})
+                    {
+                        if (res0.recordset[0].type === "Admin")
+                            response.send({state: 1, log: "LOGIN_SUCCEED", form: res0.recordset[0]})
+                        else response.send({state: -6, log: "LOGIN_USERNAME_IS_NOT_ADMIN", form: res0.recordset[0]})
+                    } else response.send({state: -5, log: "LOGIN_USERNAME_IS_NOT_CORRECT"})
                 }
             }
         })
@@ -119,7 +122,7 @@ const update = ({id, name, phone, response}) =>
                             else response.send({
                                 state: 1,
                                 log: "SUCCESSFUL_USER_NAME_UPDATE",
-                                form: rec.recordset[0]
+                                form: rec.recordset[0],
                             })
                         })
                     } else response.send({
@@ -221,7 +224,7 @@ const delete_user = ({user_id, admin_id, response}) =>
                                     :
                                     response.send({
                                         state: -9,
-                                        log: "YOU_DO_NOT_HAVE_PERMISSION_TO_PERFORM_THIS_ACTION"
+                                        log: "YOU_DO_NOT_HAVE_PERMISSION_TO_PERFORM_THIS_ACTION",
                                     })
                             } else response.send({state: -8, log: "USER_NOT_EXIST"})
                         }
