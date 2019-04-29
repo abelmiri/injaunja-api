@@ -7,7 +7,7 @@ let event_router = express.Router()
 
 ////////////////////////////////////// ROUTERS_CONFIG_ENDED
 
-const {create, update, select, deleting, selectByCategoryId} = require("../functions/event")
+const {create, update, select, deleting, selectByCategoryId, selectByDateAndCategoryId} = require("../functions/event")
 
 ////////////////////////////////////// FUNCTION_CALLS_ENDED
 
@@ -18,6 +18,26 @@ event_router.route("/")
         select({id: null, response: res})
     })
 
+event_router.route("/date/")
+    .post((req, res) =>
+    {
+        res.setHeader("Access-Control-Allow-Origin", "*")
+        let data = {...req.body}
+
+        /** @namespace data.event_year */
+        /** @namespace data.event_month */
+        data.category_id && data.event_month && data.event_year ?
+            !isNaN(data.category_id) && !isNaN(data.event_month) && !isNaN(data.event_year) ?
+                selectByDateAndCategoryId({
+                    category_id: data.category_id,
+                    event_month: data.event_month,
+                    event_year: data.event_year,
+                    response: res,
+                })
+                : res.send({state: -2, log: `GET_EVENTS_BY_DATE_AND_CATEGORY_ID_PARAMETERS_ARE_NOT_INTEGER`})
+            : res.send({state: -1, log: `GET_EVENTS_BY_DATE_AND_CATEGORY_ID_PARAMETERS_UNDEFINED`})
+    })
+
 event_router.route("/category_id/:id")
     .get((req, res) =>
     {
@@ -26,6 +46,7 @@ event_router.route("/category_id/:id")
             selectByCategoryId({category_id: req.params.id, response: res})
         else res.send({state: -1, log: `GET_EVENT_PARENT_${req.params.id}_IS_NOT_NUMBER`})
     })
+
 
 event_router.route("/full/:id")
     .get((req, res) =>
@@ -88,11 +109,14 @@ event_router.route("/create")
                         end_month: data.end_month,
                         end_year: data.end_year,
                         pictures: pictures,
-                        response: res
+                        response: res,
                     })
-                } else res.send({state: -3, log: "CREATE_EVENT_PARAMETERS_UNDEFINED", form: data})
-            } else res.send({state: -2, log: "CREATE_EVENT_INCORRECT_HEADER"})
-        } else res.send({state: -1, log: "CREATE_EVENT_PERMISSION_DENIED"})
+                }
+                else res.send({state: -3, log: "CREATE_EVENT_PARAMETERS_UNDEFINED", form: data})
+            }
+            else res.send({state: -2, log: "CREATE_EVENT_INCORRECT_HEADER"})
+        }
+        else res.send({state: -1, log: "CREATE_EVENT_PERMISSION_DENIED"})
     })
 
 event_router.route("/update")
@@ -141,11 +165,14 @@ event_router.route("/update")
                         end_month: data.end_month,
                         end_year: data.end_year,
                         pictures: pictures,
-                        response: res
+                        response: res,
                     })
-                } else res.send({state: -3, log: "EDIT_EVENT_PARAMETERS_UNDEFINED", form: data})
-            } else res.send({state: -2, log: "EDIT_EVENT_INCORRECT_HEADER"})
-        } else res.send({state: -1, log: "EDIT_EVENT_PERMISSION_DENIED"})
+                }
+                else res.send({state: -3, log: "EDIT_EVENT_PARAMETERS_UNDEFINED", form: data})
+            }
+            else res.send({state: -2, log: "EDIT_EVENT_INCORRECT_HEADER"})
+        }
+        else res.send({state: -1, log: "EDIT_EVENT_PERMISSION_DENIED"})
     })
 
 event_router.route("/delete")
@@ -162,7 +189,8 @@ event_router.route("/delete")
                     deleting({id: data.id, response: res}) :
                     res.send({state: -3, log: "DELETE_EVENT_PARAMETERS_UNDEFINED", form: data}) :
                 res.send({state: -2, log: "DELETE_EVENT_INCORRECT_HEADER"})
-        } else res.send({state: -1, log: "DELETE_EVENT_PERMISSION_DENIED"})
+        }
+        else res.send({state: -1, log: "DELETE_EVENT_PERMISSION_DENIED"})
     })
 
 event_router.route("/:id")

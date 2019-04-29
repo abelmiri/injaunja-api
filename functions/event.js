@@ -16,7 +16,7 @@ const create = ({category_id, name, description, info, address, location, creato
         let timestamp = new Date().getTime()
 
         let pic_names = null
-        if (pictures !== null) pic_names = pictures.map(() => Data.media_url + timestamp + Math.floor(Math.random() * 10000) + '.png')
+        if (pictures !== null) pic_names = pictures.map(() => Data.media_url + timestamp + Math.floor(Math.random() * 10000) + ".png")
 
 
         /** @namespace Jdate.date */
@@ -42,12 +42,13 @@ const create = ({category_id, name, description, info, address, location, creato
                         pictures[i].mv(pic_names[i].split(Data.restful_url).pop(), (errPic) =>
                             errPic ?
                                 console.log({errPic}) :
-                                console.log('SUCCESS_EVENT_PIC_SAVE'))
+                                console.log("SUCCESS_EVENT_PIC_SAVE"))
                     }
                 }
             }
         })
-    } else response.send({state: -4, log: "CREATE_EVENT_PARAMETERS_DOES_NOT_HAVE_REQUIRED_LENGTHS"})
+    }
+    else response.send({state: -4, log: "CREATE_EVENT_PARAMETERS_DOES_NOT_HAVE_REQUIRED_LENGTHS"})
 }
 
 const update = ({id, old_pictures, category_id, name, description, info, address, location, have_rating, is_long, start_time, end_time, start_year, start_month, start_day, end_year, end_month, end_day, pictures, response}) =>
@@ -59,7 +60,7 @@ const update = ({id, old_pictures, category_id, name, description, info, address
         let timestamp = new Date().getTime()
 
         let pic_names = []
-        if (pictures !== null) pic_names = pictures.map(() => Data.media_url + timestamp + Math.floor(Math.random() * 10000) + '.png')
+        if (pictures !== null) pic_names = pictures.map(() => Data.media_url + timestamp + Math.floor(Math.random() * 10000) + ".png")
         if (JSON.parse(old_pictures).length > 0) JSON.parse(old_pictures).forEach((p) => pic_names.push(p))
 
         // TODO: Add "notification" field / maybe no
@@ -95,12 +96,13 @@ const update = ({id, old_pictures, category_id, name, description, info, address
                         pictures[i].mv(pic_names[i].split(Data.restful_url).pop(), (errPic) =>
                             errPic ?
                                 console.log({errPic}) :
-                                console.log('SUCCESS_EVENT_PIC_SAVE'))
+                                console.log("SUCCESS_EVENT_PIC_SAVE"))
                     }
                 }
             }
         })
-    } else response.send({state: -4, log: "EDIT_EVENT_PARAMETERS_DOES_NOT_HAVE_REQUIRED_LENGTHS"})
+    }
+    else response.send({state: -4, log: "EDIT_EVENT_PARAMETERS_DOES_NOT_HAVE_REQUIRED_LENGTHS"})
 }
 
 const select = ({id, response}) =>
@@ -118,7 +120,8 @@ const select = ({id, response}) =>
                     response.send({state: 1, log: "SUCCESSFUL_GET_ALL_EVENTS", form: records.recordset})
                 }
             })
-    } else if (id > 0)
+    }
+    else if (id > 0)
     {
         let request = new mssql.Request(Connection.connection)
         request.query(
@@ -135,16 +138,17 @@ const select = ({id, response}) =>
                         response.send({
                             state: 1, log:
                                 `SUCCESSFUL_GET_EVENT_${id}`
-                            , form: records.recordset[0]
+                            , form: records.recordset[0],
                         }) :
                         response.send({
                             state: -3, log:
                                 `EVENT_${id}_NOT_FOUND`
-                            , form: null
+                            , form: null,
                         })
                 }
             })
-    } else if (id < 0)
+    }
+    else if (id < 0)
     {
         let request = new mssql.Request(Connection.connection)
         request.query(
@@ -158,12 +162,12 @@ const select = ({id, response}) =>
                         response.send({
                             state: 1, log:
                                 `SUCCESSFUL_GET_FULL_EVENT_${Math.abs(id)}`
-                            , form: records.recordset[0]
+                            , form: records.recordset[0],
                         }) :
                         response.send({
                             state: -3, log:
                                 `EVENT_${Math.abs(id)}_NOT_FOUND`
-                            , form: null
+                            , form: null,
                         })
                 }
             })
@@ -180,7 +184,7 @@ const deleting = ({id, response}) =>
             if (error) response.send({state: -5, log: "DATA_BASE_ERROR", form: error})
             else response.send({
                 state: 1, log:
-                    `DELETE_EVENT_${id}_WAS_SUCCESSFUL`
+                    `DELETE_EVENT_${id}_WAS_SUCCESSFUL`,
             })
         })
 }
@@ -201,13 +205,36 @@ const selectByCategoryId = ({category_id, response}) =>
                     response.send({
                         state: 1, log:
                             `SUCCESSFUL_GET_EVENT_BY_CATEGORY_${category_id}_ID`
-                        , form: records.recordset
+                        , form: records.recordset,
                     }) :
                     response.send({
                         state: -3, log:
                             `EVENT_OR_CATEGORY_NOT_FOUND`
-                        , form: null
+                        , form: null,
                     })
+            }
+        })
+}
+
+const selectByDateAndCategoryId = ({category_id, event_month, event_year, response}) =>
+{
+    let request = new mssql.Request(Connection.connection)
+    request.query(`select id, category_id, name, description, info, pictures, address, location, have_rating, is_long, start_time, end_time,
+                             start_day, start_month, start_year, end_day, end_month, end_year from events where
+                             category_id = N'${category_id}' and (start_month = ${event_month} or end_month = ${event_month}) and (start_year = ${event_year} or end_year = ${event_year})`
+        , (error, records) =>
+        {
+            if (error) response.send({state: -3, log: "DATA_BASE_ERROR", form: error})
+            else
+            {
+                records.recordset[0] ?
+                    response.send({
+                        state: 1,
+                        log: `SUCCESSFUL_GET_EVENTS_BY_CATEGORY_${category_id}_AND_DATE`,
+                        length: records.recordset.length,
+                        form: records.recordset,
+                    })
+                    : response.send({state: -4, log: `NO_EVENT_MATCHES_TO_THE_PROVIDED_STATEMENTS`, form: null})
             }
         })
 }
@@ -219,4 +246,5 @@ module.exports =
         select: select,
         deleting: deleting,
         selectByCategoryId: selectByCategoryId,
+        selectByDateAndCategoryId: selectByDateAndCategoryId,
     }
