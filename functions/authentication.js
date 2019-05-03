@@ -160,7 +160,7 @@ const select = ({id, response}) =>
     {
         let request = new mssql.Request(Connection.connection)
         request.query(
-            `select id, name, joined_date, joined_time from users`
+            `select id, name, username, joined_date, joined_time from users`
 
             , (error, records) =>
             {
@@ -175,7 +175,7 @@ const select = ({id, response}) =>
     {
         let request = new mssql.Request(Connection.connection)
         request.query(
-            `select id, name, username, joined_date, joined_time from users where id = N'${id}'`
+            `select id, name, username, email, joined_date, joined_time from users where id = N'${id}'`
 
             , (error, records) =>
             {
