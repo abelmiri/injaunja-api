@@ -194,8 +194,8 @@ const selectByCategoryId = ({category_id, response}) =>
     let request = new mssql.Request(Connection.connection)
     request.query(
         `select id, category_id, name, description, info, pictures, address, location, have_rating, is_long, start_time, end_time, 
-            start_day, start_month, start_year, end_day, end_month, end_year, create_date, create_time 
-        from events where category_id = N'${category_id}'`
+                    start_day, start_month, start_year, end_day, end_month, end_year, create_date, create_time 
+                    from events where category_id = N'${category_id}' order by start_year, start_month, start_day`
         , (error, records) =>
         {
             if (error) response.send({state: -2, log: "DATA_BASE_ERROR", form: error})
@@ -203,14 +203,15 @@ const selectByCategoryId = ({category_id, response}) =>
             {
                 records.recordset[0] ?
                     response.send({
-                        state: 1, log:
-                            `SUCCESSFUL_GET_EVENT_BY_CATEGORY_${category_id}_ID`
-                        , form: records.recordset,
+                        state: 1,
+                        length: records.recordset.length,
+                        log: `SUCCESSFUL_GET_EVENT_BY_CATEGORY_${category_id}_ID`,
+                        form: records.recordset,
                     }) :
                     response.send({
-                        state: -3, log:
-                            `EVENT_OR_CATEGORY_NOT_FOUND`
-                        , form: null,
+                        state: -3,
+                        log: `EVENT_OR_CATEGORY_NOT_FOUND`,
+                        form: null,
                     })
             }
         })

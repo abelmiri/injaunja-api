@@ -101,12 +101,14 @@ user_router.route("/update")
         res.setHeader("Access-Control-Allow-Origin", "*")
         let data = {...req.body}
 
-        data.id && data.name && data.phone ?
+        /** @namespace data.email */
+        data.id && data.name && data.phone && data.email ?
             update(
                 {
                     id: data.id,
                     name: data.name,
                     phone: data.phone,
+                    email: data.email,
                     response: res
                 }) : res.send({state: -1, log: "UPDATE_USER_PARAMETERS_UNDEFINED"})
     })
