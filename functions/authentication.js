@@ -160,8 +160,7 @@ const select = ({id, response}) =>
     {
         let request = new mssql.Request(Connection.connection)
         request.query(
-            `select id, name, username, joined_date, joined_time from users`
-
+            `select id, name, username, email, joined_date, joined_time from users`
             , (error, records) =>
             {
                 if (error) response.send({state: -1, log: "DATA_BASE_ERROR", form: error})
