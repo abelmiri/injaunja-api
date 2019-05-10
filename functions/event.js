@@ -189,6 +189,26 @@ const deleting = ({id, response}) =>
         })
 }
 
+const selectByString = ({string, response}) =>
+{
+    let request = new mssql.Request(Connection.connection)
+    request.query(`
+    select * from events where
+    name like N'%${string}%' or 
+    description like N'%${string}%' or
+    info like N'%${string}%' or
+    address like N'%${string}%'`, (error, records) =>
+    {
+        if (error) response.send({state: -1, log: "DATA_BASE_ERROR", form: error})
+        else
+        {
+            records.recordset[0] ?
+                response.send({state: 1, log: `SUCCESSFUL_SEARCH_EVENT`, form: records.recordset}) :
+                response.send({state: -2, log: `NO_EVENT_HAS_BEEN_FOUND`, form: []})
+        }
+    })
+}
+
 const selectByCategoryId = ({category_id, response}) =>
 {
     let request = new mssql.Request(Connection.connection)
@@ -246,6 +266,7 @@ module.exports =
         update: update,
         select: select,
         deleting: deleting,
+        selectByString: selectByString,
         selectByCategoryId: selectByCategoryId,
         selectByDateAndCategoryId: selectByDateAndCategoryId,
     }

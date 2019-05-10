@@ -7,7 +7,7 @@ let category_router = express.Router()
 
 ////////////////////////////////////// ROUTERS_CONFIG_ENDED
 
-const {create, deleting, update, select, selectByParent, selectLastOnes} = require("../functions/category")
+const {create, deleting, update, select, selectByParent, selectLastOnes, selectByString} = require("../functions/category")
 
 ////////////////////////////////////// FUNCTION_CALLS_ENDED
 
@@ -16,6 +16,13 @@ category_router.route("/")
     {
         res.setHeader("Access-Control-Allow-Origin", "*")
         select({id: null, response: res})
+    })
+
+category_router.route("/search/:string")
+    .get((req, res) =>
+    {
+        res.setHeader("Access-Control-Allow-Origin", "*")
+        selectByString({string: req.params.string, response: res})
     })
 
 category_router.route("/last/:limit")
@@ -59,11 +66,14 @@ category_router.route("/create")
                         parent_id: data.parent_id,
                         picture: picture,
                         svg: svg,
-                        response: res
+                        response: res,
                     })
-                } else res.send({state: -3, log: "CREATE_CATEGORY_PARAMETERS_UNDEFINED", form: data})
-            } else res.send({state: -2, log: "CREATE_CATEGORY_INCORRECT_HEADER"})
-        } else res.send({state: -1, log: "CREATE_CATEGORY_PERMISSION_DENIED"})
+                }
+                else res.send({state: -3, log: "CREATE_CATEGORY_PARAMETERS_UNDEFINED", form: data})
+            }
+            else res.send({state: -2, log: "CREATE_CATEGORY_INCORRECT_HEADER"})
+        }
+        else res.send({state: -1, log: "CREATE_CATEGORY_PERMISSION_DENIED"})
     })
 
 category_router.route("/delete")
@@ -80,7 +90,8 @@ category_router.route("/delete")
                     deleting({id: data.id, response: res}) :
                     res.send({state: -3, log: "DELETE_CATEGORY_PARAMETERS_UNDEFINED", form: data}) :
                 res.send({state: -2, log: "DELETE_CATEGORY_INCORRECT_HEADER"})
-        } else res.send({state: -1, log: "DELETE_CATEGORY_PERMISSION_DENIED"})
+        }
+        else res.send({state: -1, log: "DELETE_CATEGORY_PERMISSION_DENIED"})
     })
 
 category_router.route("/update")
@@ -108,9 +119,12 @@ category_router.route("/update")
                         svg: svg,
                         response: res,
                     })
-                } else res.send({state: -3, log: "UPDATE_CATEGORY_PARAMETERS_UNDEFINED", form: data})
-            } else res.send({state: -2, log: "UPDATE_CATEGORY_INCORRECT_HEADER"})
-        } else res.send({state: -1, log: "UPDATE_CATEGORY_PERMISSION_DENIED"})
+                }
+                else res.send({state: -3, log: "UPDATE_CATEGORY_PARAMETERS_UNDEFINED", form: data})
+            }
+            else res.send({state: -2, log: "UPDATE_CATEGORY_INCORRECT_HEADER"})
+        }
+        else res.send({state: -1, log: "UPDATE_CATEGORY_PERMISSION_DENIED"})
     })
 
 category_router.route("/:id")

@@ -18,7 +18,8 @@ const select = ({id, response}) =>
                 response.send({state: 1, log: "SUCCESSFUL_GET_ALL_CATEGORIES", form: records.recordset})
             }
         })
-    } else if (id > 0)
+    }
+    else if (id > 0)
     {
         let request = new mssql.Request(Connection.connection)
         request.query(`select id, name, description, subscribes, selectable, parent_id, picture, svg, create_date, create_time from categories where id = N'${id}'`, (error, records) =>
@@ -31,7 +32,8 @@ const select = ({id, response}) =>
                     response.send({state: -3, log: `CATEGORY_${id}_NOT_FOUND`, form: null})
             }
         })
-    } else if (id < 0)
+    }
+    else if (id < 0)
     {
         let request = new mssql.Request(Connection.connection)
         request.query(`select id, name, subscribes, picture, svg, create_date, create_time from categories where selectable = 1 order by subscribes desc`, (error, records) =>
@@ -44,7 +46,23 @@ const select = ({id, response}) =>
                     response.send({state: -3, log: `CATEGORIES_NOT_FOUND`, form: null})
             }
         })
-    } else response.end()
+    }
+    else response.end()
+}
+
+const selectByString = ({string, response}) =>
+{
+    let request = new mssql.Request(Connection.connection)
+    request.query(`select * from categories where name like N'%${string}%' or description like N'%${string}%'`, (error, records) =>
+    {
+        if (error) response.send({state: -1, log: "DATA_BASE_ERROR", form: error})
+        else
+        {
+            records.recordset[0] ?
+                response.send({state: 1, log: `SUCCESSFUL_SEARCH_CATEGORY`, form: records.recordset}) :
+                response.send({state: -2, log: `NO_CATEGORY_HAS_BEEN_FOUND`, form: []})
+        }
+    })
 }
 
 const selectByParent = ({parent_id, response}) =>
@@ -107,7 +125,8 @@ const create = ({name, description, selectable, parent_id, picture, svg, respons
                     response.send({state: 1, log: "SUCCESSFUL_CREATE_CATEGORY", form: records.recordset[0]})
                 }
             })
-    } else response.send({state: -4, log: "CREATE_CATEGORY_PARAMETERS_DOES_NOT_HAVE_MINIMUM_LENGTHS"})
+    }
+    else response.send({state: -4, log: "CREATE_CATEGORY_PARAMETERS_DOES_NOT_HAVE_MINIMUM_LENGTHS"})
 }
 
 const deleting = ({id, response}) =>
@@ -166,8 +185,10 @@ const update = ({id, name, description, selectable, picture, svg, response}) =>
                         }
                     })
 
-                } else response.send({state: -6, log: "NO_FIELD_FOR_UPDATE", form: null})
-            } else response.send({state: -5, log: `CATEGORY_${id}_NOT_FOUND`, form: null})
+                }
+                else response.send({state: -6, log: "NO_FIELD_FOR_UPDATE", form: null})
+            }
+            else response.send({state: -5, log: `CATEGORY_${id}_NOT_FOUND`, form: null})
         }
     })
 }
@@ -180,4 +201,5 @@ module.exports =
         update: update,
         selectByParent: selectByParent,
         selectLastOnes: selectLastOnes,
+        selectByString: selectByString,
     }

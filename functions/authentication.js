@@ -95,9 +95,11 @@ const sign_up = ({username, phone, response}) =>
                         {
                             if (err0) response.send({state: -5, log: "DATA_BASE_ERROR", form: err0})
                             else
-                            {
-                                response.send({state: 1, log: "SUCCESSFUL_SIGN_UP", form: record.recordset[0]})
-                            }
+                                response.send({
+                                    state: 1,
+                                    log: "SUCCESSFUL_SIGN_UP",
+                                    form: record.recordset[0],
+                                })
                         })
                 }
             }
@@ -147,10 +149,8 @@ const update = ({id, name, phone, email, response}) =>
 
     }
     else response.send({
-        state: -2, log:
-
-            `UPDATE_USER_${id}_IS_NOT_NUMBER`
-        ,
+        state: -2,
+        log: `UPDATE_USER_${id}_IS_NOT_NUMBER`,
     })
 }
 
@@ -163,11 +163,18 @@ const select = ({id, response}) =>
             `select id, name, username, email, joined_date, joined_time from users`
             , (error, records) =>
             {
-                if (error) response.send({state: -1, log: "DATA_BASE_ERROR", form: error})
+                if (error)
+                    response.send({
+                        state: -1,
+                        log: "DATA_BASE_ERROR",
+                        form: error,
+                    })
                 else
-                {
-                    response.send({state: 1, log: "SUCCESSFUL_GET_ALL_USERS", form: records.recordset})
-                }
+                    response.send({
+                        state: 1,
+                        log: "SUCCESSFUL_GET_ALL_USERS",
+                        form: records.recordset,
+                    })
             })
     }
     else
@@ -183,18 +190,14 @@ const select = ({id, response}) =>
                 {
                     records.recordset[0] ?
                         response.send({
-                            state: 1, log:
-
-                                `SUCCESSFUL_GET_USER_${id}`
-
-                            , form: records.recordset[0],
+                            state: 1,
+                            log: `SUCCESSFUL_GET_USER_${id}`,
+                            form: records.recordset[0],
                         }) :
                         response.send({
-                            state: -3, log:
-
-                                `USER_${id}_NOT_FOUND`
-
-                            , form: null,
+                            state: -3,
+                            log: `USER_${id}_NOT_FOUND`,
+                            form: null,
                         })
                 }
             })
@@ -231,18 +234,14 @@ const select_admin = ({id, response}) =>
                 {
                     records.recordset[0] ?
                         response.send({
-                            state: 1, log:
-
-                                `SUCCESSFUL_GET_USER_${id}`
-
-                            , form: records.recordset[0],
+                            state: 1,
+                            log: `SUCCESSFUL_GET_USER_${id}`,
+                            form: records.recordset[0],
                         }) :
                         response.send({
-                            state: -3, log:
-
-                                `USER_${id}_NOT_FOUND`
-
-                            , form: null,
+                            state: -3,
+                            log: `USER_${id}_NOT_FOUND`,
+                            form: null,
                         })
                 }
             })
@@ -253,9 +252,7 @@ const delete_user = ({user_id, admin_id, response}) =>
 {
     let request = new mssql.Request(Connection.connection)
     request.query(
-        `select type from users where id = N'${admin_id}'`
-
-        , (error, records) =>
+        `select type from users where id = N'${admin_id}'`, (error, records) =>
         {
             if (error) response.send({state: -4, log: "DATA_BASE_ERROR", form: error})
             else

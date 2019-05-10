@@ -7,7 +7,7 @@ let event_router = express.Router()
 
 ////////////////////////////////////// ROUTERS_CONFIG_ENDED
 
-const {create, update, select, deleting, selectByCategoryId, selectByDateAndCategoryId} = require("../functions/event")
+const {create, update, select, deleting, selectByCategoryId, selectByDateAndCategoryId, selectByString} = require("../functions/event")
 
 ////////////////////////////////////// FUNCTION_CALLS_ENDED
 
@@ -38,6 +38,13 @@ event_router.route("/date/")
             : res.send({state: -1, log: `GET_EVENTS_BY_DATE_AND_CATEGORY_ID_PARAMETERS_UNDEFINED`})
     })
 
+event_router.route("/search/:string")
+    .get((req, res) =>
+    {
+        res.setHeader("Access-Control-Allow-Origin", "*")
+        selectByString({string: req.params.string, response: res})
+    })
+
 event_router.route("/category_id/:id")
     .get((req, res) =>
     {
@@ -46,7 +53,6 @@ event_router.route("/category_id/:id")
             selectByCategoryId({category_id: req.params.id, response: res})
         else res.send({state: -1, log: `GET_EVENT_PARENT_${req.params.id}_IS_NOT_NUMBER`})
     })
-
 
 event_router.route("/full/:id")
     .get((req, res) =>
