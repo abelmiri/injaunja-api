@@ -23,7 +23,6 @@ const create = ({category_id, name, description, info, address, location, creato
         let create_date = `${Jdate.date[0]}/${Jdate.date[1]}/${Jdate.date[2]}`
         let create_time = `${date.getHours()}:${date.getMinutes()}`
 
-        // TODO: Add "notification" field / maybe no
         request.query(`insert into events (category_id, name, description, info, address, location, creator_id, have_rating, is_long, create_date, create_time, pictures,
         start_time, end_time, start_year, start_month, start_day ${end_year ? ", end_year," : ""}${end_month ? "end_month," : ""}${end_day ? "end_day" : ""})
         output (inserted.id)
@@ -63,7 +62,6 @@ const update = ({id, old_pictures, category_id, name, description, info, address
         if (pictures !== null) pic_names = pictures.map(() => Data.media_url + timestamp + Math.floor(Math.random() * 10000) + ".png")
         if (JSON.parse(old_pictures).length > 0) JSON.parse(old_pictures).forEach((p) => pic_names.push(p))
 
-        // TODO: Add "notification" field / maybe no
         request.query(`update events set 
         category_id = N'${category_id}',
         name = N'${name}',
