@@ -12,14 +12,16 @@ let ios_token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhcHBfdHlwZSI6ImlvcyJ9.M
 let sign = "0x410x620x650x6c"
 let port = 1435
 
-exports.domain_url = domain_url
-exports.restful_url = restful_url
-exports.media_url = media_url
-exports.vector_url = vector_url
-exports.media_location = media_location
-exports.vector_location = vector_location
-exports.auth = auth
-exports.android_token = android_token
-exports.ios_token = ios_token
-exports.sign = sign
-exports.port = port
+module.exports = {
+    domain_url: domain_url,
+    restful_url: restful_url,
+    media_url: media_url,
+    vector_url: vector_url,
+    media_location: media_location,
+    vector_location: vector_location,
+    auth: auth,
+    android_token: android_token,
+    ios_token: ios_token,
+    sign: sign,
+    port: port,
+}

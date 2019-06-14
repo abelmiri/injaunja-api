@@ -37,5 +37,5 @@ app.use("/", Root)
 
 app.listen(process.env.PORT || Data.port, () =>
 {
-    console.log(`Server is Now Running on Port ${Data.port}, (${Data.sign})HEX - ${Data.restful_url}`)
+    console.log(`Server is Now Running on Port ${Data.port}, (${Data.sign})HEX - API: ${Data.restful_url} - DOMAIN: ${Data.domain_url}`)
 })

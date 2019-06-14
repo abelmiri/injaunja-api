@@ -1,8 +1,14 @@
+let Connection = require("../connection")
+let jwt = require("jsonwebtoken")
 let JDate = require("jalali-date")
 let mssql = require("mssql")
-let Connection = require("../connection")
 
 ////////////////////////////////////// MODULES_IMPORTS_ENDED
+
+const {encode} = require("./token")
+
+////////////////////////////////////// FUNCTION_CALLS_ENDED
+
 
 const login = ({phone, response}) =>
 {
@@ -53,7 +59,23 @@ const admin_login = ({phone, username, response}) =>
                     if (username === res0.recordset[0].username)
                     {
                         if (res0.recordset[0].type === "Admin")
-                            response.send({state: 1, log: "LOGIN_SUCCEED", form: res0.recordset[0]})
+                        {
+                            const callback = () =>
+                            {
+                                response.send({
+                                    state: 1,
+                                    log: "LOGIN_SUCCEED",
+                                    form: res0.recordset[0],
+                                })
+                            }
+                            let payload =
+                                {
+                                    id: res0.recordset[0].id,
+                                    username: username,
+                                    phone: phone,
+                                }
+                            encode({payload, response, callback})
+                        }
                         else response.send({state: -6, log: "LOGIN_USERNAME_IS_NOT_ADMIN", form: res0.recordset[0]})
                     }
                     else response.send({state: -5, log: "LOGIN_USERNAME_IS_NOT_CORRECT"})
