@@ -210,10 +210,18 @@ const selectByString = ({string, response}) =>
 const selectByCategoryId = ({category_id, response}) =>
 {
     let request = new mssql.Request(Connection.connection)
+
+    let Jdate = new JDate()
+    /** @namespace Jdate.date */
+    let current_date_abel = Jdate.date[0] * 365 + (Jdate.date[1] - 1) * 30 + Jdate.date[2]
+
     request.query(
         `select id, category_id, name, description, info, pictures, address, location, have_rating, is_long, start_time, end_time, 
                     start_day, start_month, start_year, end_day, end_month, end_year, create_date, create_time 
-                    from events where category_id = N'${category_id}' order by start_year, start_month, start_day`
+                    from events where 
+                    category_id = N'${category_id}' and
+                    (start_year * 365 + (start_month - 1) * 30 + start_day >= ${current_date_abel} or end_year * 365 + (end_month - 1) * 30 + end_day >= ${current_date_abel})
+                    order by start_year, start_month, start_day`
         , (error, records) =>
         {
             if (error) response.send({state: -2, log: "DATA_BASE_ERROR", form: error})
