@@ -40,8 +40,8 @@ const create = ({category_id, name, description, info, address, location, creato
                     {
                         pictures[i].mv(pic_names[i].split(Data.restful_url).pop(), (errPic) =>
                             errPic ?
-                                console.log({errPic}) :
-                                console.log("SUCCESS_EVENT_PIC_SAVE"))
+                                console.log(pic_names[i])
+                                : console.log("SUCCESS_EVENT_PIC_SAVE"))
                     }
                 }
             }

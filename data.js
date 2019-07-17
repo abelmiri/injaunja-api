@@ -1,5 +1,6 @@
 let domain_url = "http://injaunja.com/"
-let restful_url = "http://restful.injaunja.com/"
+// let restful_url = "http://restful.injaunja.com/"
+let restful_url = "http://185.211.58.174:1435/"
 // let media_url = "http://restful.injaunja.com/files/media/"
 let media_url = "http://185.211.58.174:1435/files/media/"
 // let vector_url = "http://restful.injaunja.com/files/svg/"
