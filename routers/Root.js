@@ -3,8 +3,6 @@ let path = require('path')
 
 ////////////////////////////////////// MODULES_IMPORTS_ENDED
 
-const app = express()
-
 let root_router = express.Router()
 
 root_router.route("/")

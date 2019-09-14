@@ -5,6 +5,11 @@ let Connection = require("../connection")
 
 ////////////////////////////////////// MODULES_IMPORTS_ENDED
 
+const {apnFunction} = require("../apn_connection")
+
+////////////////////////////////////// FUNCTION_CALLS_ENDED
+
+
 const addNotification = ({event_id, notification, response}) =>
 {
     let request = new mssql.Request(Connection.connection)
@@ -18,12 +23,12 @@ const addNotification = ({event_id, notification, response}) =>
     })
 }
 
-const getUserShortNotification = ({user_id, response}) =>
+const getUserShortNotification = ({user_id, response, is_ios}) =>
 {
     let request = new mssql.Request(Connection.connection)
     request.query(`select * from users where id = N'${user_id}'`, (error, records) =>
     {
-        if (error) response.send({state: -5, log: "DATA_BASE_ERROR", form: error})
+        if (error) !is_ios && response.send({state: -5, log: "DATA_BASE_ERROR", form: error})
         else
         {
             if (records.recordset.length > 0)
@@ -64,7 +69,7 @@ const getUserShortNotification = ({user_id, response}) =>
                                 })`
                             , (err, event_records) =>
                             {
-                                if (err) response.send({
+                                if (err) !is_ios && response.send({
                                     state: -7,
                                     log: "DATA_BASE_ERROR",
                                     form: err,
@@ -78,7 +83,7 @@ const getUserShortNotification = ({user_id, response}) =>
                                         {
                                             setTimeout(() =>
                                             {
-                                                processLongEvents(selected_events, response, user_id)
+                                                processLongEvents(selected_events, response, user_id, is_ios)
                                             }, 30)
                                         }
                                     })
@@ -87,19 +92,19 @@ const getUserShortNotification = ({user_id, response}) =>
                                 {
                                     setTimeout(() =>
                                     {
-                                        processLongEvents(selected_events, response, user_id)
+                                        processLongEvents(selected_events, response, user_id, is_ios)
                                     }, 30)
                                 }
                             })
                     })
                 }
-                else response.send({
+                else !is_ios && response.send({
                     state: 0,
                     log: `USER_${user_id}_HAVE_NO_FAVORITES`,
                     form: user_categories_arr ? user_categories_arr : [],
                 })
             }
-            else response.send({
+            else !is_ios && response.send({
                 state: -6,
                 log: `USER_${user_id}_NOT_FOUND`,
                 form: records.recordset ? records.recordset : [],
@@ -108,12 +113,12 @@ const getUserShortNotification = ({user_id, response}) =>
     })
 }
 
-const getUserLongNotification = ({user_id, response}) =>
+const getUserLongNotification = ({user_id, response, is_ios}) =>
 {
     let request = new mssql.Request(Connection.connection)
     request.query(`select * from users where id = N'${user_id}'`, (error, records) =>
     {
-        if (error) response.send({state: -5, log: "DATA_BASE_ERROR", form: error})
+        if (error) !is_ios && response.send({state: -5, log: "DATA_BASE_ERROR", form: error})
         else
         {
             if (records.recordset.length > 0)
@@ -140,7 +145,7 @@ const getUserLongNotification = ({user_id, response}) =>
                             and ((start_year * 365 + (start_month - 1) * 30 + start_day) <= ${current_date_abel} and (end_year * 365 + (end_month - 1) * 30 + end_day) >= ${current_date_abel})`
                             , (err, event_records) =>
                             {
-                                if (err) response.send({
+                                if (err) !is_ios && response.send({
                                     state: -7,
                                     log: "DATA_BASE_ERROR",
                                     form: err,
@@ -154,7 +159,7 @@ const getUserLongNotification = ({user_id, response}) =>
                                         {
                                             setTimeout(() =>
                                             {
-                                                processLongEvents(selected_events, response, user_id)
+                                                processLongEvents(selected_events, response, user_id, is_ios)
                                             }, 30)
                                         }
                                     })
@@ -163,19 +168,19 @@ const getUserLongNotification = ({user_id, response}) =>
                                 {
                                     setTimeout(() =>
                                     {
-                                        processLongEvents(selected_events, response, user_id)
+                                        processLongEvents(selected_events, response, user_id, is_ios)
                                     }, 30)
                                 }
                             })
                     })
                 }
-                else response.send({
+                else !is_ios && response.send({
                     state: 0,
                     log: `USER_${user_id}_HAVE_NO_FAVORITES`,
                     form: user_categories_arr ? user_categories_arr : [],
                 })
             }
-            else response.send({
+            else !is_ios && response.send({
                 state: -6,
                 log: `USER_${user_id}_NOT_FOUND`,
                 form: records.recordset ? records.recordset : [],
@@ -184,7 +189,7 @@ const getUserLongNotification = ({user_id, response}) =>
     })
 }
 
-function processLongEvents(events, response, user_id)
+function processLongEvents(events, response, user_id, is_ios)
 {
     if (events.length > 0)
     {
@@ -210,7 +215,7 @@ function processLongEvents(events, response, user_id)
                 })
                 setTimeout(() =>
                 {
-                    processNotifications(events_notifications, response, user_id)
+                    processNotifications(events_notifications, response, user_id, is_ios)
                 }, 30)
             }
             else
@@ -235,7 +240,7 @@ function processLongEvents(events, response, user_id)
     }
     else
     {
-        response.send({
+        !is_ios && response.send({
             state: 0,
             log: `NO_EVENT_AVAILABLE_FOR_USER_${user_id}`,
             form: [],
@@ -243,7 +248,7 @@ function processLongEvents(events, response, user_id)
     }
 }
 
-function processNotifications(notifications, response, user_id)
+function processNotifications(notifications, response, user_id, is_ios)
 {
     let Jdate = new JDate()
     let date = new Date()
@@ -284,7 +289,7 @@ function processNotifications(notifications, response, user_id)
                 }
                 setTimeout(() =>
                 {
-                    processOnTimeNotifications(on_time_notifications, response, user_id)
+                    processOnTimeNotifications(on_time_notifications, response, user_id, is_ios)
                 }, 30)
             }
             else
@@ -318,7 +323,7 @@ function processNotifications(notifications, response, user_id)
     }
     else
     {
-        response.send({
+        !is_ios && response.send({
             state: 0,
             log: `NO_NOTIFICATION_AVAILABLE_FOR_USER_${user_id}`,
             form: [],
@@ -326,7 +331,7 @@ function processNotifications(notifications, response, user_id)
     }
 }
 
-function processOnTimeNotifications(notifications, response, user_id)
+function processOnTimeNotifications(notifications, response, user_id, is_ios)
 {
     if (notifications.length > 0)
     {
@@ -348,7 +353,7 @@ function processOnTimeNotifications(notifications, response, user_id)
                 notification_id = ${notification.notification_id}
                 `, (error, logs) =>
                 {
-                    if (error) response.send({state: -6, log: "DATA_BASE_ERROR", form: error})
+                    if (error) !is_ios && response.send({state: -6, log: "DATA_BASE_ERROR", form: error})
                     else
                     {
                         if (logs.recordset.length === 0)
@@ -366,11 +371,21 @@ function processOnTimeNotifications(notifications, response, user_id)
                         }
                         setTimeout(() =>
                         {
-                            response.send({
+                            !is_ios ? response.send({
                                 state: ready_to_send_notifications.length > 0 ? 1 : 0,
                                 log: `USER_${user_id}_ON_TIME_NOTIFICATIONS`,
                                 form: ready_to_send_notifications,
                             })
+                                : ready_to_send_notifications.length > 0 &&
+                                ready_to_send_notifications.forEach((apnNotification) =>{
+                                    apnFunction({
+                                        notification_title: apnNotification.notification_title,
+                                        notification_description: apnNotification.notification_description,
+                                        category_id: apnNotification.category_id,
+                                        event_id: apnNotification.event_id,
+                                        is_ios,
+                                    })
+                                })
                         }, 30)
                     }
                 })
@@ -384,7 +399,7 @@ function processOnTimeNotifications(notifications, response, user_id)
                 notification_id = ${notification.notification_id}
                 `, (error, logs) =>
                 {
-                    if (error) response.send({state: -6, log: "DATA_BASE_ERROR", form: error})
+                    if (error) !is_ios && response.send({state: -6, log: "DATA_BASE_ERROR", form: error})
                     else
                     {
                         if (logs.recordset.length === 0)
@@ -407,7 +422,7 @@ function processOnTimeNotifications(notifications, response, user_id)
     }
     else
     {
-        response.send({
+        !is_ios && response.send({
             state: 0,
             log: `NO_ON_TIME_NOTIFICATION_AVAILABLE_FOR_USER_${user_id}`,
             form: [],
