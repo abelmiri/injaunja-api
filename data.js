@@ -16,6 +16,7 @@ let port = 1435
 let apnKey = "AuthKey_M5CQZ8F5D5.p8"
 let apnKeyId = "M5CQZ8F5D5"
 let apnTeamId = "V9Q9C32UDJ"
+let apnBundleId = "Mohammad.Tahmasebi.GolApp.testNotifAbtahi"
 let apnKeyLocation = restful_url + keys_location + apnKey
 
 module.exports = {
@@ -33,5 +34,6 @@ module.exports = {
     apnKey: apnKey,
     apnKeyId: apnKeyId,
     apnTeamId: apnTeamId,
+    apnBundleId: apnBundleId,
     apnKeyLocation: apnKeyLocation,
 }

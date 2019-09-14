@@ -10,7 +10,7 @@ const {getUserShortNotification, getUserLongNotification} = require("./functions
 
 ////////////////////////////////////// FUNCTION_CALLS_ENDED
 
-setInterval(() =>
+setTimeout(() =>
 {
     let request = new mssql.Request(Connection.connection)
     request.query(`select id, device_token from users where is_ios = 'true'`, (error, records) =>
@@ -25,6 +25,12 @@ setInterval(() =>
             })
         }
     })
+
+    // apnFunction({
+    //     notification_title: "Title",
+    //     notification_description: "Desc",
+    //     is_ios: "4f234e819c1d3fe625e0a6dc07148c76f03380f8e0f3bf12951505a9e36be3ba",
+    // })
 }, 420000) // Every 7 Minutes
 
 
@@ -45,7 +51,7 @@ const apnFunction = ({notification_title = "Title Test", notification_descriptio
             body: notification_title,
             title: notification_description,
         },
-        topic = "InjaUnja Topic test",
+        topic = Data.apnBundleId,
         badge = 5,
         priority = 5,
         pushType = "alert",
@@ -59,10 +65,10 @@ const apnFunction = ({notification_title = "Title Test", notification_descriptio
     notification.pushType = pushType
     notification.expiry = Math.floor(Date.now() / 1000) + 21600 // 6 Hours
 
-    apnProvider.send(notification, is_ios) // c5c83d377c0016cc88957909e45404721e26768653d9d2aeb29aad6fd63dd1ce
+    apnProvider.send(notification, is_ios) // 4f234e819c1d3fe625e0a6dc07148c76f03380f8e0f3bf12951505a9e36be3ba
         .then(res =>
         {
-            console.log("OnApnSuccess ->", res)
+            console.log("OnApnSuccessRes ->", res)
         })
         .catch(err =>
         {
@@ -73,7 +79,6 @@ const apnFunction = ({notification_title = "Title Test", notification_descriptio
             apnProvider.shutdown()
             console.log("OnApnShutdown ->", notification.id)
         })
-
 }
 
 module.exports =
