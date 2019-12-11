@@ -10,7 +10,7 @@ const {getUserShortNotification, getUserLongNotification} = require("./functions
 
 ////////////////////////////////////// FUNCTION_CALLS_ENDED
 
-setTimeout(() =>
+setInterval(() =>
 {
     let request = new mssql.Request(Connection.connection)
     request.query(`select id, device_token from users where is_ios = 'true'`, (error, records) =>
@@ -25,14 +25,17 @@ setTimeout(() =>
             })
         }
     })
-
-    // apnFunction({
-    //     notification_title: "Title",
-    //     notification_description: "Desc",
-    //     is_ios: "4f234e819c1d3fe625e0a6dc07148c76f03380f8e0f3bf12951505a9e36be3ba",
-    // })
 }, 420000) // Every 7 Minutes
 
+// setTimeout(() => // Test
+// {
+//     apnFunction({
+//         notification_title: "Title",
+//         notification_description: "Desc",
+        // is_ios: "4f234e819c1d3fe625e0a6dc07148c76f03380f8e0f3bf12951505a9e36be3ba", // Ok Test
+//         is_ios: "7eeb2c61337cfdd7d1645cde6d91d54c5415c96c748f1f65a42de033a05e2fda", // Develop Ok Test
+//     })
+// }, 5000) // After 5 Second
 
 const apnFunction = ({notification_title = "Title Test", notification_description = "Body Test", is_ios = "something"}) =>
 {

@@ -16,7 +16,8 @@ let port = 1435
 let apnKey = "AuthKey_M5CQZ8F5D5.p8"
 let apnKeyId = "M5CQZ8F5D5"
 let apnTeamId = "V9Q9C32UDJ"
-let apnBundleId = "Mohammad.Tahmasebi.GolApp.testNotifAbtahi"
+// let apnBundleId = "Mohammad.Tahmasebi.GolApp.testNotifAbtahi" // Ok Test
+let apnBundleId = "GolApp.Tahmasebi.Mohammad.Calendar" // Ok Develop
 let apnKeyLocation = restful_url + keys_location + apnKey
 
 module.exports = {

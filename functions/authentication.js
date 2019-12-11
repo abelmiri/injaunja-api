@@ -86,7 +86,7 @@ const admin_login = ({phone, username, response}) =>
     else response.send({state: -2, log: "LOGIN_PARAMETERS_PARAMETERS_DOES_NOT_HAVE_MINIMUM_LENGTHS"})
 }
 
-const sign_up = ({username, phone, response}) =>
+const sign_up = ({username, phone, device_token, response}) =>
 {
     if (username.length >= 4 && phone.length === 11)
     {
@@ -110,9 +110,9 @@ const sign_up = ({username, phone, response}) =>
                 }
                 else
                 {
-                    request.query(`insert into users (username, phone, type, joined_date, joined_time) 
+                    request.query(`insert into users (username, phone, type, is_ios, device_token, joined_date, joined_time) 
                     output (inserted.id) 
-                    values (N'${username}', N'${phone}', N'Person', N'${sign_up_date}', N'${sign_up_time}')`,
+                    values (N'${username}', N'${phone}', N'Person', '${device_token ? "true" : "false"}', N'${device_token ? device_token : ""}', N'${sign_up_date}', N'${sign_up_time}')`,
                         (err0, record) =>
                         {
                             if (err0) response.send({state: -5, log: "DATA_BASE_ERROR", form: err0})

@@ -124,6 +124,7 @@ user_router.route("/sign_up")
                 {
                     username: data.username,
                     phone: data.phone,
+                    device_token: data.is_ios,
                     response: res,
                 }) : res.send({state: -1, log: "SIGN_UP_PARAMETERS_UNDEFINED"})
     })
